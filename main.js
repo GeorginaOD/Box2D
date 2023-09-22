@@ -33,6 +33,8 @@ var world = new b2World(
         true
     );
 
+    var canJump = false;
+
 /* World Objects */
 
 //static
@@ -107,6 +109,16 @@ listener.BeginContact = function(contact) {
     if (fixa == "ground" && fixb == "barrel") {
         destroylist.push(contact.GetFixtureB().GetBody());
     }
+    if(fixa == "hero" && fixb == "ground") {
+        console.log("got here 1");
+        canJump = true;
+        ///return canJump;
+    } 
+    if (fixa == "ground" && fixb == "hero") {
+        console.log("got here 2");
+        canJump = true;
+        // return canJump;
+    }
 }
 listener.EndContact = function(contact) {
 //console.log("End Contact:"+contact.GetFixtureA().GetBody().GetUserData());
@@ -115,6 +127,8 @@ listener.PostSolve = function(contact, impulse) {
     var fixa=contact.GetFixtureA().GetBody().GetUserData().id;
     var fixb=contact.GetFixtureB().GetBody().GetUserData().id;
     console.log(fixa+" hits "+fixb+" with imp:"+impulse.normalImpulses[0]);
+    // console.log(fixa+" hits "+fixb+" with imp:"+impulse.normalImpulses[0]);
+        
     }
 listener.PreSolve = function(contact, oldManifold) {
 }
@@ -122,7 +136,7 @@ this.world.SetContactListener(listener);
 
 //***** Controls*/
 
-var canJump = 0;
+
 
 $(document).keydown(function(e) {
     var keyCode = e.keyCode ? e.keyCode : e.which;
@@ -137,35 +151,11 @@ $(document).keydown(function(e) {
     }
     console.log("b4 keypress canJump"+canJump);
     if (keyCode == 87 || keyCode == 32) {
-        console.log("b4 jump command canJump"+canJump);
-        listener.PostSolve = function(contact, impulse) {
-        var fixa=contact.GetFixtureA().GetBody().GetUserData().id;
-        var fixb=contact.GetFixtureB().GetBody().GetUserData().id;
+        // console.log("b4 jump command canJump"+canJump);
+        dojump();
         
-        // console.log(fixa+" hits "+fixb+" with imp:"+impulse.normalImpulses[0]);
-            if(fixa == "hero" && fixb == "ground") {
-                console.log("got here 1");
-                canJump = 1;
-                return canJump;
-            } 
-            if (fixa == "ground" && fixb == "hero") {
-                console.log("got here 2");
-                canJump = 1;
-                return canJump;
-            }
-            if (fixa != "ground" && fixb != "hero") {
-                console.log("got here 3");
-                canJump = 0;
-                return canJump;
-            }
-            if(fixa != "hero" && fixb != "ground") {
-                console.log("got here 4");
-                canJump = 1;
-                return canJump;
-            } 
-        }
-        console.log("b4 dojump canJump"+canJump)
-        dojump(canJump);
+        // console.log("b4 dojump canJump"+canJump)
+        
         //up
     }
 
@@ -197,11 +187,11 @@ $(document).keyup(function(e) {
 /*****
 * Utility Functions & Objects
 */
-function dojump(canJump) {
+function dojump() {
     //console.log("Canjump" + canJump);
-    if (canJump == 1) {
+    if (canJump == true) {
         hero.GetBody().ApplyImpulse(new b2Vec2(0,-3), hero.GetBody().GetWorldCenter());
-        canJump -= 1;
+        canJump = false;
         console.log("afterjump command canJump"+canJump);
     }
     
