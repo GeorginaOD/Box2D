@@ -66,8 +66,7 @@ hero.GetBody().SetFixedRotation(true);
 Debug Draw
 */
 var debugDraw = new b2DebugDraw();
-debugDraw.SetSprite(document.getElementById("b2dcan").getContext("2d")
-);
+debugDraw.SetSprite(document.getElementById("b2dcan").getContext("2d"));
 debugDraw.SetDrawScale(SCALE);
 debugDraw.SetFillAlpha(0.3);
 debugDraw.SetLineThickness(1.0);
